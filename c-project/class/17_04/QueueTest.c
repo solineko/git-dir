@@ -10,10 +10,9 @@ int main(void){
 	item.gumption=3;
 	InitializeQueue(&queue);
 	EnQueue(item,&queue);
-	Item saveItem;
-	s_log(queue.items);
-	s_log(DeQueue(&saveItem,&queue));
-	s_log(saveItem.gumption);
+	s_log(QueueIsEmpty(&queue));
+	EmptyTheQueue(&queue);
+	s_log(QueueIsEmpty(&queue));
 	return 0;
 }
 

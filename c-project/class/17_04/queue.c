@@ -60,6 +60,14 @@ bool DeQueue(Item * item,Queue * pq){
 	return true;
 }
 
+void EmptyTheQueue(Queue * pq){
+	Item item;
+	while(!QueueIsEmpty(pq)){
+		DeQueue(&item,pq);
+	}
+
+}
+
 static void CopyToNode(Item item,Node * pnode){
 	pnode->item=item;
 } 
