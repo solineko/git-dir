@@ -45,26 +45,29 @@ int main(void){
 				EnQueue(temp,&line);
 			}
 		}
-		if(wait_time<=0&!QueueIsEmpty(&line)){
+		if(wait_time<=0&&!QueueIsEmpty(&line)){
 			DeQueue(&temp,&line);
 			wait_time=temp.processtime;
 			line_wait+=cycle-temp.arrive;//当前时间减去到达时间得到该顾客在队列中等待直到移出队列的时间；
 			served++;
 		}
-		else{
+		// else{
+		// 	wait_time--;
+		// }
+		if(wait_time>0){
 			wait_time--;
 		}
 		sum_line+=QueueItemCount(&line);
-		if(customers>0){
-			printf("customers accepted: %ld\n",customers);
-			printf("customers served: %ld\n",served);
-			printf("turnaways: %ld\n",turnaways);
-			printf("average queue size:%.2f\n",(double)sum_line/cyclelimit);
-			printf("average wait time: %.2f minutes\n",(double)line_wait/served);
-		}
-		else{
-			puts("No customers!");
-		}
+	}
+	if(customers>0){
+		printf("customers accepted: %ld\n",customers);
+		printf("customers served: %ld\n",served);
+		printf("turnaways: %ld\n",turnaways);
+		printf("average queue size:%.2f\n",(double)sum_line/cyclelimit);
+		printf("average wait time: %.2f minutes\n",(double)line_wait/served);
+	}
+	else{
+		puts("No customers!");
 	}
 	EmptyTheQueue(&line);
 	puts("Bye!");
