@@ -1,7 +1,7 @@
 #ifndef _Queue_H_
 #define _Queue_H_
 
-#define MAXQUEUE 45
+#define MAXQUEUE 10
 
 typedef enum bool {
 	false,
