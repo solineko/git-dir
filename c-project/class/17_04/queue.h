@@ -36,7 +36,7 @@ extern bool EnQueue(Item,Queue *);
 
 extern bool DeQueue(Item *,Queue *);
 
-extern void EmptyQueue(Queue * pq); 
+extern void EmptyTheQueue(Queue * pq); 
 
 
 #endif
