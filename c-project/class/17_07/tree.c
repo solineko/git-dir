@@ -1,10 +1,43 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "tree.h"
 
+typedef struct pair{
+	Trnode * parent;
+	Trnode * child;
+}Pair;
+
+
 static Trnode * MakeNode(Item *);
 static void AddNode(Trnode * new_node,Trnode * root);
+static bool ToLeft(const Item *,const Item *);
+static bool ToRight(const Item *,const Item *);
+static Pair SeekNode(const Item *,const Tree *);
+
+void InitializeTree(Tree * ptree){
+	ptree->root=NULL;
+	ptree->size=0;
+}
+
+bool TreeIsEmpty(const Tree * ptree){
+	if(ptree->root==NULL){
+		return true;
+	}
+	else{
+		return false;
+	}
+}
+
+bool TreeIsFull(const Tree * ptree){
+	if(ptree->size==MAXITEMS){
+		return true;
+	}
+	else{
+		return false;
+	}
+}
 
 bool AddItem(const Item * pi,Tree * ptree){
 	Trnode * new_node;
@@ -12,10 +45,23 @@ bool AddItem(const Item * pi,Tree * ptree){
 		fprintf(stderr,"Tree is full\n");
 		return false;
 	}
-	
+	if(SeekNode(pi,ptree).child!=NULL){
+		return false;
+	}
+	new_node=MakeNode(pi);
+	if(new_node==NULL){
+		fprintf(stderr, "Couldn't create node\n");
+		return false;
+	}
+	ptree->size++;
+	if(ptree->root==NULL){
+		ptree->root=new_node;
+	}
+	else{
+		AddNode(new_node,ptree->root);
+	}
+	return false;
 }
-
-
 
 static Trnode * MakeNode(Item * pi){
 	Trnode * new_node;
@@ -28,7 +74,7 @@ static Trnode * MakeNode(Item * pi){
 	return new_node;
 }
 
-static void AddNode(Item * new_node,Trnode * root){
+static void AddNode(Trnode * new_node,Trnode * root){
 	if(ToLeft(&new_node->item,&root->item)){
 		if(root->left==NULL){
 			root->left=new_node;
@@ -52,5 +98,67 @@ static void AddNode(Item * new_node,Trnode * root){
 }
 
 static bool ToLeft(const Item * i1,const Item * i2){
+	int comp1;
+	if(comp1=strcmp(i1->petname,i2->petname)<0){
+		return true;
+	}
+	else if(comp1==0&&strcmp(i1->petkind,i2->petkind)<0){
+		return true;
+	}
+	else{
+		return false;
+	}
+}
+
+static bool ToRight(const Item * i1,const Item * i2){
+	int comp1;
+	if(comp1=strcmp(i1->petname,i2->petname)>0){
+		return true;
+	}
+	else if(comp1==0&&strcmp(i1->petkind,i2->petkind)){
+		return true;
+	}
+	else{
+		return false;
+	}
+}
+
+static Pair SeekNode(const Item * pi,const Tree * ptree){
+	Pair look;
+	look.parent=NULL;
+	look.child=ptree->root;
+	if(look.child==NULL){
+		return look;
+	}
+	while(look.child!=NULL){
+		if(ToLeft(pi,&(look.child->item))){
+			look.parent=look.child;
+			look.child=look.child->left;
+		}
+		else if(ToRight(pi,&(look.child->item))){
+			look.parent=look.child;
+			look.child=look.child->right;
+		}
+		else{
+			break;
+		}
+	}
+	return look;
+}
+
+static void DeleteNode(Trnode ** ptr){
+	Trnode * temp;
+	if((*ptr)->left==NULL){
+		temp=*ptr;
+		*ptr=(*ptr)->right;
+		free(temp);
+	}
+}
+
+
+bool DeleteItem(const Item * pi,Tree * ptree){
 
 }
+
+
+

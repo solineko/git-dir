@@ -13,6 +13,7 @@ typedef struct item{
 #define MAXITEMS 10
 
 typedef struct trnode{
+	Item item;
 	struct trnode * left;
 	struct trnode * right;
 }Trnode;
@@ -24,11 +25,11 @@ typedef struct tree{
 
 extern void InitializeTree(Tree * ptree);
 
-extern bool TreeIsEmpty(Tree * ptree);
+extern bool TreeIsEmpty(const Tree * ptree);
 
-extern bool TreeIsFull(Tree * ptree);
+extern bool TreeIsFull(const Tree * ptree);
 
-extern int TreeItemCount(Tree * ptree);
+extern int TreeItemCount(const Tree * ptree);
 
 extern bool AddItem(const Item * pi,Tree * ptree);
 
