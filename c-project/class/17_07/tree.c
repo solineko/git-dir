@@ -14,7 +14,8 @@ static Trnode * MakeNode(const Item *);
 static void AddNode(Trnode * new_node,Trnode * root);
 static bool ToLeft(const Item *,const Item *);
 static bool ToRight(const Item *,const Item *);
-static Pair SeekNode(const Item *,const Tree *);
+static Pair SeekItem(const Item *,const Tree *);
+static void DeleteAllNodes(Trnode *);
 
 void InitializeTree(Tree * ptree){
 	ptree->root=NULL;
@@ -45,7 +46,7 @@ bool AddItem(const Item * pi,Tree * ptree){
 		fprintf(stderr,"Tree is full\n");
 		return false;
 	}
-	if(SeekNode(pi,ptree).child!=NULL){
+	if(SeekItem(pi,ptree).child!=NULL){
 		return false;
 	}
 	new_node=MakeNode(pi);
@@ -123,7 +124,7 @@ static bool ToRight(const Item * i1,const Item * i2){
 	}
 }
 
-static Pair SeekNode(const Item * pi,const Tree * ptree){
+static Pair SeekItem(const Item * pi,const Tree * ptree){
 	Pair look;
 	look.parent=NULL;
 	look.child=ptree->root;
@@ -145,6 +146,10 @@ static Pair SeekNode(const Item * pi,const Tree * ptree){
 	}
 	return look;
 }
+
+
+
+
 
 static void DeleteNode(Trnode ** ptr){
 	Trnode * temp;
@@ -172,7 +177,7 @@ static void DeleteNode(Trnode ** ptr){
 
 bool DeleteItem(const Item * pi,Tree * ptree){
 	Pair look;
-	look=SeekNode(pi,ptree);
+	look=SeekItem(pi,ptree);
 	if(look.child==NULL){
 		return false;
 	}
@@ -189,6 +194,17 @@ bool DeleteItem(const Item * pi,Tree * ptree){
 	return true;
 }
 
+bool InTree(const Item * pi,const Tree * ptree){
+	return (SeekItem(pi,ptree).child==NULL)?false:true;
+}
+
+void Traverse(const Tree * ptree,void (*pfun)(Item item)){
+	if(ptree!=NULL){
+		InOrder(ptree->root,pfun);
+	}
+}
+
+
 static void InOrder(const Trnode * root,void(*pfun)(Item item)){
 	if(root!=NULL){
 		InOrder(root->left,pfun);
@@ -197,3 +213,20 @@ static void InOrder(const Trnode * root,void(*pfun)(Item item)){
 	}
 }
 
+void DeleteAll(Tree * ptree){
+	if(ptree!=NULL){
+		DeleteAllNodes(ptree->root);
+	}
+	ptree->root=NULL;
+	ptree->size=0;
+}
+
+static void DeleteAllNodes(Trnode * root){
+	Trnode * pright;
+	if(root!=NULL){
+		pright=root->right;
+		DeleteAllNodes(root->left);
+		free(root);
+		DeleteAllNodes(pright);
+	}	
+}
